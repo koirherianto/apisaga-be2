@@ -1,0 +1,142 @@
+apisaga
+
+test3@gmail.com
+oat_MjYx.U0pyaGdCM0FMd2N2Snd0Q1JwT1d5eWdGYUZsd3RlMGwzZngtVnNGQjM1Mzk5MzgxNDA
+
+contoh@gmail.com
+oat_MjYy.OTJMS0EwYjBfQjFaY2VETXh3OVBFUzlWam9sX0tRdnFkMl8zcUxURjg4MTEyMzc1
+
+88951094-aec6-4a08-b366-6e6e1d5812a8
+
+===================================================================================
+
+jika salah satu default (true yang) yang lain false
+
+jika type version
+  version status enum 'major', 'minor', 'patch'
+ 
+
+jika type brance
+  version status kosong
+
+jika ok 200
+jika crated 201
+
+jika token salah 401
+jika validasi salah 422
+jika validasi db 404 (no content)
+jika email already exist 409
+
+=============================================================
+http://103.127.98.191/
+
++ adalah tanda untuk akun sudah login (memiliki token)
+- adalah tanda untuk belum ada akun (anonym)
+// adalah tanda user mengakses tampilan frontend (posisi user ada dimana)
+|| adalah tanda FE mengakses link Ke BE
+
+-----------------------------------------------------
+
+- Pengguna akan mendaftar akun
++ Diarahkan ke beranda
+// /register
+ || akan mengakses /auth/register [POST]
+
+- Pengguna akan Masuk Akun 
++ diarahkan ke beranda
+// /login
+ || akan mengakses /auth/login [POST]
+
++ pengguna akan mengakses data profil
+- pengguna akan melihatkan profil orang lain
+// /u/:username
+ || akan mengakses auth/me [GET]
+
++ pengguna akan mengakses update data profil
+- 
+// /u/:username
+ || akan mengakses auth/me [POST]
+
++ pengguna akan logout
+- 
+// (dari manapun bisa logout)
+ || akan mengakses auth/logout [DELETE]
+
+--------------------------------------------------------
+
++ Halaman Beranda (menampilkan semua project Paling Populer dan pribadi)
+- Halaman Beranda (menampilkan project Paling Populer)
+// /
+ || akan mengakses /project [GET]
+
++ Pengguna membuat project baru
+// /
+ || akan mengakses /project [POST]
+
++ pengguna mengklik projectnya (Dapat akses edit ke projectnya) (ke versi yang paling baru) (ke default halaman primary)
+- mengakses project anonym (hanya dapat melihat)
+// /:project-slug   diarahkan ke /:project-slug/:latest-version
+ || akan mengakses /project/:project-slug [GET]
+
++ pengguna dapat memperbarui edit data project
+- 
+// /
+ || akan mengakses /project/:project-slug [UPDATE]
+
++ pengguna dapat menghapus project
+- 
+// /
+ || akan mengakses /project/:project-slug [DELETE]
+
+----------------------------------------------------------------
+
++ pengguna dapat membuat versi pada suatu project
+- 
+// /:project-slug/:version
+ || akan mengakses /project/:project-slug/version [CREATE]
+
++ pengguna dapat melihat semua versi pada suatu project
+- pengguna dapat melihat semua versi pada suatu project yang dipublish
+// /:project-slug/:version atau /:project-slug/
+ || akan mengakses /project/:project-slug/version [GET]
+
++ pengguna dapat memilih versi pada projectnya (memiliki hak akses edit) (ke default halaman primary)
+- mengakses project anonym (hanya dapat melihat) ke versi tertentu 
+// /:project-slug/:version
+ || akan mengakses /project/:project-slug/version/:version [GET]
+
++ pengguna dapat memperbarui data version 
+- 
+// /:project-slug/:version
+ || akan mengakses /project/:project-slug/version/:version [PUT]
+
++ pengguna dapat menghapus versi tertentu
+-
+// /:project-slug/:version
+ || akan mengakses /project/:project-slug/version/:version [DELETE]
+
+--------------------------------------------------------------------
++ pengguna dapat melihat konten (dengan fitur edit WYSIWYG)
+- hanya bisa melihat blog
+// /:project-slug/:version/:item-slug
+ || akan mengakses /project/:project-slug/version/:version/sidebar-items/:item-slug
+
+
++ pengguna dapat membuat sidebar item baru
+- 
+// /:project-slug/:version/:item-slug
+  || akan mengakses /project/:project-slug/version/:version/sidebar-items
+	
+
+
+
+
+
+ 
+
+// :project-slug   [untuk melihat projectnya dia dengan versi terbaru]
+// :project-slug/:version   [untuk melihat projectnya dia dengan versi tertentu, dan conten awal]
+// :project-slug/:version/:slug-sidebar   [untuk melihat projectnya dia dengan versi tertentu dan konten tertentu ]
+// :project-slug/:version/:slug-seperator/:slug-sidebar [untuk melihat projectnya dia dengan versi tertentu, didalam separator dan konten tertentu ]
+//  u/:username
+//  
