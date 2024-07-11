@@ -2,7 +2,7 @@ import { DateTime } from 'luxon'
 import { BaseModel, beforeCreate, belongsTo, column, hasMany } from '@adonisjs/lucid/orm'
 import Project from '#models/project'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
-// import TopBar from './top_bar.js'
+import Topbar from './topbar.js'
 
 export default class Version extends BaseModel {
   @column({ isPrimary: true })
@@ -30,12 +30,24 @@ export default class Version extends BaseModel {
   declare updatedAt: DateTime
 
   @beforeCreate()
-  static assignUuid(version: Version) {
+  static async assignUuid(version: Version) {
     version.id = crypto.randomUUID()
+
+    // version harus unik di dalam project
+    const project = await Project.findOrFail(version.projectId)
+    const existingVersion = await project
+      .related('versions')
+      .query()
+      .where('name', version.name)
+      .first()
+
+    if (existingVersion) {
+      throw new Error('Version name must be unique')
+    }
   }
 
-  //   @hasMany(() => TopBar)
-  //   declare topBars: HasMany<typeof TopBar>
+  @hasMany(() => Topbar)
+  declare topbars: HasMany<typeof Topbar>
 
   @belongsTo(() => Project)
   declare project: BelongsTo<typeof Project>
