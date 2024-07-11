@@ -91,7 +91,12 @@ export default class AuthController {
       }
     }
 
-    await user.merge(validate).save()
+    // remove password if empty
+    if (!(validate.password !== undefined && validate.password !== '')) {
+      delete validate.password
+    }
+
+    user.merge(validate)
 
     return response.status(200).json({
       success: true,
