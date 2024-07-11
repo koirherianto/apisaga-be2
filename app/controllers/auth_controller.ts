@@ -97,6 +97,7 @@ export default class AuthController {
     }
 
     user.merge(validate)
+    await user.save()
 
     return response.status(200).json({
       success: true,
