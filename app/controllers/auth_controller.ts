@@ -1,5 +1,5 @@
 import User from '#models/user'
-import { loginValidator, registerValidator } from '#validators/auth'
+import { loginValidator, registerValidator, updateProfileValidator } from '#validators/auth'
 import type { HttpContext } from '@adonisjs/core/http'
 import ResponseError from '#exceptions/respon_error_exception'
 
@@ -68,6 +68,35 @@ export default class AuthController {
       success: true,
       data: user,
       message: 'User data retrieved successfully',
+    })
+  }
+
+  async update({ auth, request, response }: HttpContext) {
+    const user = auth.user!
+    const validate = await request.validateUsing(updateProfileValidator)
+
+    if (validate.email) {
+      const isEmailExist = await User.findBy('email', validate.email)
+
+      if (isEmailExist && isEmailExist.id !== user.id) {
+        throw new ResponseError('Email already registered', { status: 400 })
+      }
+    }
+
+    if (validate.username) {
+      const isUsernameExist = await User.findBy('username', validate.username)
+
+      if (isUsernameExist && isUsernameExist.id !== user.id) {
+        throw new ResponseError('Username already registered', { status: 400 })
+      }
+    }
+
+    await user.merge(validate).save()
+
+    return response.status(200).json({
+      success: true,
+      data: user,
+      message: 'User data updated successfully',
     })
   }
 
