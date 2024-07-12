@@ -56,7 +56,6 @@ export default class Project extends BaseModel {
   declare versions: HasMany<typeof Version>
 
   @manyToMany(() => User, {
-    pivotTable: 'project_user',
     pivotTimestamps: true,
   })
   declare users: ManyToMany<typeof User>

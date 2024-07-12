@@ -1,11 +1,11 @@
 import { DateTime } from 'luxon'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
-import { BaseModel, beforeCreate, column, manyToMany } from '@adonisjs/lucid/orm'
+import { BaseModel, column, manyToMany, beforeCreate } from '@adonisjs/lucid/orm'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
 import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
-import Project from './project.js'
 import type { ManyToMany } from '@adonisjs/lucid/types/relations'
+import Project from '#models/project'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
@@ -41,10 +41,17 @@ export default class User extends compose(BaseModel, AuthFinder) {
     user.id = crypto.randomUUID()
   }
 
+  // relasi many to many ke project
   @manyToMany(() => Project, {
-    pivotTable: 'project_user',
+    // localKey: 'id', // nama kolom primary key di table ini
+    // pivotForeignKey: 'user_id', // nama kolom foreign key di pivot table
+    // relatedKey: 'id', // nama kolom primary key di table target
+    // pivotRelatedForeignKey: 'project_id', // nama kolom foreign key di pivot table
+    pivotTable: 'project_user', // nama pivot table
+    // pivotColumns: [], // jika tabel pivot memiliki kolom tambahan
     pivotTimestamps: {
-      createdAt: true,
+      // jika tabel pivot memiliki kolom timestamps
+      createdAt: 'created_at',
       updatedAt: true,
     },
   })

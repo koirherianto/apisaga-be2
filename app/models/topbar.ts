@@ -40,19 +40,6 @@ export default class Topbar extends BaseModel {
   @beforeCreate()
   static async assignUuid(topbar: Topbar) {
     topbar.id = crypto.randomUUID()
-
     topbar.slug = string.slug(topbar.name, { lower: true })
-
-    const version = await Version.findOrFail(topbar.versionId)
-    // topbar harus unik di dalam version
-    const existingTopbar = await version
-      .related('topbars')
-      .query()
-      .where('name', topbar.name)
-      .first()
-
-    if (existingTopbar) {
-      throw new Error('Topbar name must be unique')
-    }
   }
 }

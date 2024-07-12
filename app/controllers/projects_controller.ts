@@ -35,11 +35,12 @@ export default class ProjectsController {
   async store({ auth, request, response }: HttpContext) {
     // return data
     const data = await request.validateUsing(createProjectValidator)
+    
     const trx = await db.transaction()
     try {
       const user = auth.user!
-      const project = await Project.create(data, { client: trx })
-      user.related('projects').save(project)
+      user.useTransaction(trx)
+      const project = await user.related('projects').create(data)
 
       // Create version within the transaction
       const version = await Version.create(
@@ -52,7 +53,7 @@ export default class ProjectsController {
         { client: trx }
       )
 
-      // Create TopBar within the transaction
+      // // Create TopBar within the transaction
       const topBar = await Topbar.create(
         {
           versionId: version.id,
@@ -62,7 +63,7 @@ export default class ProjectsController {
         { client: trx }
       )
 
-      // // Create SidebarItem within the transaction
+      // // // Create SidebarItem within the transaction
       const leftBar = await LeftbarItem.create(
         {
           topBarId: topBar.id,

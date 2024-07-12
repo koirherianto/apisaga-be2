@@ -1,21 +1,23 @@
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'versions'
+  protected tableName = 'leftbar_items'
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary().notNullable()
+      table.uuid('topbar_id').references('id').inTable('topbars').onDelete('CASCADE').notNullable()
       table
-        .uuid('project_id')
+        .uuid('leftbar_separator_id')
         .references('id')
-        .inTable('projects')
+        .inTable('leftbar_separators')
         .onDelete('CASCADE')
-        .notNullable()
+        .nullable()
       table.string('name', 100).notNullable()
       table.string('slug', 150).notNullable()
+      table.tinyint('order').notNullable()
+      table.text('content').nullable()
       table.boolean('is_default').defaultTo(false).notNullable()
-      table.enum('visibility', ['public', 'private', 'archives']).notNullable()
 
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at')

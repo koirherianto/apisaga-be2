@@ -39,21 +39,7 @@ export default class LeftbarItem extends BaseModel {
   @beforeCreate()
   static async assignUuid(leftbarItem: LeftbarItem) {
     leftbarItem.id = crypto.randomUUID()
-
     leftbarItem.slug = string.slug(leftbarItem.name, { lower: true })
-
-    const topbar = await Topbar.findOrFail(leftbarItem.topBarId)
-
-    // leftbarItem harus unik di dalam topbar
-    const existingLeftbarItem = await topbar
-      .related('leftbarItems')
-      .query()
-      .where('slug', leftbarItem.slug)
-      .first()
-
-    if (existingLeftbarItem) {
-      throw new Error('LeftbarItem name must be unique')
-    }
   }
 
   @belongsTo(() => Topbar)
