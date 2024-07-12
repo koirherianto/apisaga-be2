@@ -18,6 +18,7 @@ router.get('/projects', [ProjectsController, 'index'])
 router.group(() => {
   router.get('/me', [AuthController, 'me'])
   router.put('/me', [AuthController, 'update']) 
-
   router.delete('/logout', [AuthController, 'logout']) 
+
+  router.post('/projects', [ProjectsController, 'store'])
 }).use(middleware.auth())

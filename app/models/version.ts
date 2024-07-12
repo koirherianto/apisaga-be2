@@ -3,6 +3,7 @@ import { BaseModel, beforeCreate, belongsTo, column, hasMany } from '@adonisjs/l
 import Project from '#models/project'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import Topbar from './topbar.js'
+import string from '@adonisjs/core/helpers/string'
 
 export default class Version extends BaseModel {
   @column({ isPrimary: true })
@@ -13,6 +14,9 @@ export default class Version extends BaseModel {
 
   @column()
   declare name: string
+
+  @column()
+  declare slug: string
 
   @column()
   declare isDefault: boolean
@@ -32,18 +36,7 @@ export default class Version extends BaseModel {
   @beforeCreate()
   static async assignUuid(version: Version) {
     version.id = crypto.randomUUID()
-
-    // version harus unik di dalam project
-    const project = await Project.findOrFail(version.projectId)
-    const existingVersion = await project
-      .related('versions')
-      .query()
-      .where('name', version.name)
-      .first()
-
-    if (existingVersion) {
-      throw new Error('Version name must be unique')
-    }
+    version.slug = string.slug(version.name, { lower: true })
   }
 
   @hasMany(() => Topbar)
