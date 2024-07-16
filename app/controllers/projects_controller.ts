@@ -62,7 +62,7 @@ export default class ProjectsController {
 
       const leftBar = await LeftbarItem.create(
         {
-          topBarId: topBar.id,
+          topbarId: topBar.id,
           name: 'Introduction',
           order: 1,
           isDefault: true,
@@ -74,7 +74,7 @@ export default class ProjectsController {
       await trx.commit()
 
       const routeUrl = {
-        project: project.slug,
+        repository: project.slug,
         version: version.slug,
         topBar: topBar.slug,
         leftBar: leftBar.slug,
