@@ -21,4 +21,6 @@ router.group(() => {
   router.delete('/logout', [AuthController, 'logout']) 
 
   router.post('/projects', [ProjectsController, 'store'])
+  
+  router.post('/defaulturl/:slug', [ProjectsController, 'defaultUrl'])
 }).use(middleware.auth())

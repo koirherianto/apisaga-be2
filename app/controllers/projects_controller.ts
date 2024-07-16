@@ -92,4 +92,48 @@ export default class ProjectsController {
       throw error
     }
   }
+
+  // default url for project
+  async defaultUrl({request, params, response }: HttpContext) {
+    const project = await Project.findByOrFail('slug', params.slug)
+
+    // jika version dikirim
+    let version
+    if (request.input('version')) {
+      version = await project.related('versions').query().where('slug', request.input('version')).firstOrFail()
+    }else {
+      version = await project.related('versions').query().where('is_default', true).firstOrFail()
+    }
+
+    // jika topbar dikirim
+    let topBar
+    if (request.input('topbar')) {
+      topBar = await version.related('topbars').query().where('slug', request.input('topbar')).firstOrFail()
+    }else {
+      topBar = await version.related('topbars').query().where('is_default', true).firstOrFail()
+    }
+
+    // jika leftbar dikirim
+    let leftBar
+    if (request.input('leftbar')) {
+      leftBar = await topBar.related('leftbarItems').query().where('slug', request.input('leftbar')).firstOrFail()
+    } else {
+      leftBar = await topBar.related('leftbarItems').query().where('is_default', true).firstOrFail()
+    }
+
+    const routeUrl = {
+      repository: project.slug,
+      version: version.slug,
+      topBar: topBar.slug,
+      leftBar: leftBar.slug,
+      linkBe: `/projects/${project.slug}/versions/${version.slug}/topbars/${topBar.slug}/leftbars/${leftBar.slug}`,
+      linkFe: `${project.slug}/${version.slug}/${topBar.slug}/${leftBar.slug}`
+    }
+
+    return response.ok({
+      success: true,
+      data: routeUrl,
+      message: 'routeUrl fetched successfully',
+    })
+  }
 }
