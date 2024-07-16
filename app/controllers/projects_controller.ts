@@ -124,8 +124,8 @@ export default class ProjectsController {
     const routeUrl = {
       repository: project.slug,
       version: version.slug,
-      topBar: topBar.slug,
-      leftBar: leftBar.slug,
+      topbar: topBar.slug,
+      leftbar: leftBar.slug,
       linkBe: `/projects/${project.slug}/versions/${version.slug}/topbars/${topBar.slug}/leftbars/${leftBar.slug}`,
       linkFe: `${project.slug}/${version.slug}/${topBar.slug}/${leftBar.slug}`
     }
