@@ -106,33 +106,39 @@ export default class ProjectsController {
     }
 
     // jika topbar dikirim
-    let topBar
+    let topbar
     if (request.input('topbar')) {
-      topBar = await version.related('topbars').query().where('slug', request.input('topbar')).firstOrFail()
+      topbar = await version.related('topbars').query().where('slug', request.input('topbar')).firstOrFail()
     }else {
-      topBar = await version.related('topbars').query().where('is_default', true).firstOrFail()
+      topbar = await version.related('topbars').query().where('is_default', true).firstOrFail()
     }
 
+    const leftbarList = await topbar.related('leftbarItems').query().orderBy('order', 'asc').exec()
+
     // jika leftbar dikirim
-    let leftBar
+    let leftbar
     if (request.input('leftbar')) {
-      leftBar = await topBar.related('leftbarItems').query().where('slug', request.input('leftbar')).firstOrFail()
+      leftbar = await topbar.related('leftbarItems').query().where('slug', request.input('leftbar')).firstOrFail()
     } else {
-      leftBar = await topBar.related('leftbarItems').query().where('is_default', true).firstOrFail()
+      leftbar = await topbar.related('leftbarItems').query().where('is_default', true).firstOrFail()
     }
 
     const routeUrl = {
       repository: project.slug,
       version: version.slug,
-      topbar: topBar.slug,
-      leftbar: leftBar.slug,
-      linkBe: `/projects/${project.slug}/versions/${version.slug}/topbars/${topBar.slug}/leftbars/${leftBar.slug}`,
-      linkFe: `${project.slug}/${version.slug}/${topBar.slug}/${leftBar.slug}`
+      topbar: topbar.slug,
+      leftbar: leftbar.slug,
+      linkBe: `/projects/${project.slug}/versions/${version.slug}/topbars/${topbar.slug}/leftbars/${leftbar.slug}`,
+      linkFe: `${project.slug}/${version.slug}/${topbar.slug}/${leftbar.slug}`
     }
 
     return response.ok({
       success: true,
-      data: routeUrl,
+      data: {
+        routeUrl,
+        leftbar,
+        leftbarList : leftbarList
+      },
       message: 'routeUrl fetched successfully',
     })
   }

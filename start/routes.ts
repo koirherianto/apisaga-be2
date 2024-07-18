@@ -2,6 +2,7 @@
 
 const AuthController = () => import('#controllers/auth_controller')
 const ProjectsController = () => import('#controllers/projects_controller')
+const LeftbarsController = () => import('#controllers/leftbar_controller')
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 
@@ -23,4 +24,6 @@ router.group(() => {
   router.post('/projects', [ProjectsController, 'store'])
   
   router.post('/defaulturl/:slug', [ProjectsController, 'defaultUrl'])
+
+  router.post('/projects/:projectSlug/versions/:version/topbars/:topbarSlug/leftbars', [LeftbarsController, 'store'])
 }).use(middleware.auth())

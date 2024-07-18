@@ -13,7 +13,7 @@ export default class LeftbarItem extends BaseModel {
   declare topbarId: string
 
   @column()
-  declare sidebarSeparatorId: string | null
+  declare leftbarSeparatorId: string | null
 
   @column()
   declare name: string
