@@ -39,6 +39,77 @@ export default class LeftbarsController {
     })
   }
 
+  async update({ auth, params, request, response }: HttpContext) {
+    const validate = await request.validateUsing(createLeftbarItemValidator)
+
+    const topBar = await this.checkTopbarMustExist(
+      auth,
+      params.projectSlug,
+      params.version,
+      params.topbarSlug
+    )
+
+    const leftbarItem = await topBar
+      .related('leftbarItems')
+      .query()
+      .where('slug', params.leftbarSlug)
+      .first()
+
+    if (!leftbarItem) {
+      throw new ResponseError('Leftbar item not found', { status: 404 })
+    }
+
+    await leftbarItem.merge(validate).save()
+
+    return response.ok({
+      success: true,
+      data: leftbarItem,
+      message: 'Leftbar item updated successfully',
+    })
+  }
+
+  async destroy({ auth, params, response }: HttpContext) {
+    const topBar = await this.checkTopbarMustExist(
+      auth,
+      params.projectSlug,
+      params.version,
+      params.topbarSlug
+    )
+
+    // jika topbar hanya memiliki 1 leftbar item
+    const topbars = await topBar.related('leftbarItems').query()
+    if (topbars.length === 1) {
+      throw new ResponseError('Cannot delete the last leftbar item', { status: 400 })
+    }
+
+    const leftbarItem = await topBar
+      .related('leftbarItems')
+      .query()
+      .where('slug', params.leftbarSlug)
+      .first()
+
+    if (!leftbarItem) {
+      throw new ResponseError('Leftbar item not found', { status: 404 })
+    }
+
+    await leftbarItem.delete()
+    const firstLeftbarItem = await topBar
+      .related('leftbarItems')
+      .query()
+      .orderBy('order', 'asc')
+      .first()
+
+    if (firstLeftbarItem) {
+      firstLeftbarItem.isDefault = true
+      await firstLeftbarItem.save()
+    }
+
+    return response.ok({
+      success: true,
+      message: 'Leftbar item deleted successfully',
+    })
+  }
+
   private async checkTopbarMustExist(
     auth: Authenticator<Authenticators>,
     projectSlug: string,

@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, beforeCreate, belongsTo, column } from '@adonisjs/lucid/orm'
+import { BaseModel, beforeCreate, beforeUpdate, belongsTo, column } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import string from '@adonisjs/core/helpers/string'
 import Topbar from './topbar.js'
@@ -40,6 +40,12 @@ export default class LeftbarItem extends BaseModel {
   static async assignUuid(leftbarItem: LeftbarItem) {
     leftbarItem.id = crypto.randomUUID()
     leftbarItem.slug = string.slug(leftbarItem.name, { lower: true })
+  }
+
+  @beforeUpdate()
+  static async updateSlug(leftbarItem: LeftbarItem) {
+    leftbarItem.slug = string.slug(leftbarItem.name, { lower: true })
+    // leftbarItem.save()
   }
 
   @belongsTo(() => Topbar)

@@ -26,4 +26,7 @@ router.group(() => {
   router.post('/defaulturl/:slug', [ProjectsController, 'defaultUrl'])
 
   router.post('/projects/:projectSlug/versions/:version/topbars/:topbarSlug/leftbars', [LeftbarsController, 'store'])
+  router.put('/projects/:projectSlug/versions/:version/topbars/:topbarSlug/leftbars/:leftbarSlug', [LeftbarsController, 'update'])
+  router.delete('/projects/:projectSlug/versions/:version/topbars/:topbarSlug/leftbars/:leftbarSlug', [LeftbarsController, 'destroy'])
+
 }).use(middleware.auth())

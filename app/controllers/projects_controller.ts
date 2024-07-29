@@ -105,6 +105,7 @@ export default class ProjectsController {
       version = await project.related('versions').query().where('is_default', true).firstOrFail()
     }
 
+    
     // jika topbar dikirim
     let topbar
     if (request.input('topbar')) {
@@ -112,7 +113,7 @@ export default class ProjectsController {
     }else {
       topbar = await version.related('topbars').query().where('is_default', true).firstOrFail()
     }
-
+    
     const leftbarList = await topbar.related('leftbarItems').query().orderBy('order', 'asc').exec()
 
     // jika leftbar dikirim
