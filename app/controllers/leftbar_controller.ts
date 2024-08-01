@@ -1,5 +1,5 @@
 import LeftbarItem from '#models/leftbar_item'
-import { createLeftbarItemValidator } from '#validators/leftbar'
+import { createLeftbarItemValidator, updateLeftbarItemValidator } from '#validators/leftbar'
 import { Authenticator } from '@adonisjs/auth'
 import { Authenticators } from '@adonisjs/auth/types'
 import type { HttpContext } from '@adonisjs/core/http'
@@ -40,7 +40,7 @@ export default class LeftbarsController {
   }
 
   async update({ auth, params, request, response }: HttpContext) {
-    const validate = await request.validateUsing(createLeftbarItemValidator)
+    const validate = await request.validateUsing(updateLeftbarItemValidator)
 
     const topBar = await this.checkTopbarMustExist(
       auth,
