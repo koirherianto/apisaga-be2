@@ -6,6 +6,7 @@ module.exports = {
       instances: 'max',
       exec_mode: 'cluster',
       autorestart: true,
+      interpreter: 'node',
     },
   ],
 }
