@@ -41,7 +41,6 @@ export default class LeftbarsController {
 
   async update({ auth, params, request, response }: HttpContext) {
     const validate = await request.validateUsing(updateLeftbarItemValidator)
-
     const topBar = await this.checkTopbarMustExist(
       auth,
       params.projectSlug,

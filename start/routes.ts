@@ -15,6 +15,7 @@ router.post('/login', [AuthController, 'login'])
 
 // bisa login dan anonymous
 router.get('/projects', [ProjectsController, 'index'])
+router.post('/defaulturl/:slug', [ProjectsController, 'defaultUrl'])
 
 router.group(() => {
   router.get('/me', [AuthController, 'me'])
@@ -23,7 +24,6 @@ router.group(() => {
 
   router.post('/projects', [ProjectsController, 'store'])
   
-  router.post('/defaulturl/:slug', [ProjectsController, 'defaultUrl'])
 
   router.post('/projects/:projectSlug/versions/:version/topbars/:topbarSlug/leftbars', [LeftbarsController, 'store'])
   router.put('/projects/:projectSlug/versions/:version/topbars/:topbarSlug/leftbars/:leftbarSlug', [LeftbarsController, 'update'])

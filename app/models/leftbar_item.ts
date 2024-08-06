@@ -28,7 +28,7 @@ export default class LeftbarItem extends BaseModel {
   declare isDefault: boolean
 
   @column()
-  declare content: string | null
+  declare content?: string | null
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
